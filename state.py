@@ -2,6 +2,8 @@
 
 import json
 import os
+import sys
+import threading
 from pathlib import Path
 from datetime import datetime
 
@@ -16,7 +18,8 @@ class AutomationState:
 
     def __init__(self, state_dir=None):
         if state_dir is None:
-            state_dir = Path(__file__).parent
+            state_dir = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent
+        self._lock = threading.RLock()
         self.state_path = Path(state_dir) / STATE_FILE
         self.data = self._load()
 
@@ -43,11 +46,11 @@ class AutomationState:
         }
 
     def save(self):
-        try:
-            with open(self.state_path, "w", encoding="utf-8") as f:
+        with self._lock:
+            tmp = self.state_path.with_suffix(".json.tmp")
+            with open(tmp, "w", encoding="utf-8") as f:
                 json.dump(self.data, f, ensure_ascii=False, indent=2)
-        except OSError:
-            pass
+            os.replace(tmp, self.state_path)
 
     # ── 已处理状态 ──────────────────────────────────────────
 

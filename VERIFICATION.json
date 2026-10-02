@@ -1,0 +1,28 @@
+{
+  "merge": "PASS: real 720p/20s video + audio, output validated, sources retained, repeat scan no overwrite",
+  "source_total_MiB": 18.03,
+  "ffmpeg_merge_throttled": {
+    "peak_working_set_MiB": 24.04,
+    "cpu_one_core_percent": 1.23,
+    "seconds": 5.1
+  },
+  "gui_monitor": {
+    "peak_working_set_MiB": 39.75,
+    "cpu_one_core_percent": 1.36,
+    "seconds": 8.07
+  },
+  "portable_gui": {
+    "peak_working_set_MiB": 35.68,
+    "cpu_one_core_percent": 1.23,
+    "seconds": 5.07
+  },
+  "portable": "PASS: GUI starts with system-only PATH; bundled Python and FFmpeg present",
+  "package_MiB": 190.2,
+  "ffmpeg_unthrottled_streamcopy": {
+    "peak_working_set_MiB": 20.12,
+    "cpu_one_core_percent": 55.79,
+    "total_seconds": 1.681,
+    "runs": 10,
+    "input_MiB": 18.04
+  }
+}

@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+NO_WINDOW = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+
 
 def find_ffmpeg():
     """查找 ffmpeg.exe 和 ffprobe.exe
@@ -14,7 +16,7 @@ def find_ffmpeg():
     1. 程序目录下的 ffmpeg/ 子目录
     2. Windows PATH
     """
-    program_dir = Path(__file__).parent
+    program_dir = Path(__file__).parent.resolve()
 
     # 1. 检查程序目录下的 ffmpeg 子目录
     ffmpeg_dir = program_dir / "ffmpeg"
@@ -50,7 +52,7 @@ def get_ffprobe_info(ffprobe_path, file_path):
     ]
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=30
+            cmd, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=30, creationflags=NO_WINDOW
         )
         if result.returncode != 0:
             return None
@@ -176,6 +178,7 @@ def merge_audio_video(ffmpeg_path, ffprobe_path, video_path, audio_path, output_
 
     cmd = [
         str(ffmpeg_path),
+        "-hide_banner", "-loglevel", "error", "-nostdin",
         "-i", str(video_path),
         "-i", str(audio_path),
         "-map", "0:v:0",
@@ -187,7 +190,7 @@ def merge_audio_video(ffmpeg_path, ffprobe_path, video_path, audio_path, output_
     ]
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=300)
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=300, creationflags=NO_WINDOW)
     except subprocess.TimeoutExpired:
         # 清理临时文件
         if tmp_output.exists():

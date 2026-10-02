@@ -1,0 +1,7 @@
+__pycache__/
+build/
+dist/
+ffmpeg/
+automation_state.json*
+*.spec
+qa-output/
